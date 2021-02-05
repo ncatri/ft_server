@@ -6,7 +6,7 @@
 #    By: ncatrien <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/02/02 13:13:51 by ncatrien          #+#    #+#              #
-#    Updated: 2021/02/05 13:50:21 by ncatrien         ###   ########lyon.fr    #
+#    Updated: 2021/02/05 15:56:28 by ncatrien         ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,3 +29,4 @@ EXPOSE 80 443
 
 
 CMD ["bash", "-v", "install_script.sh"]
+#CMD ["nginx", "-g", "daemon off;"]
