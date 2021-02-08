@@ -6,7 +6,7 @@
 #    By: ncatrien <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/02/02 13:13:51 by ncatrien          #+#    #+#              #
-#    Updated: 2021/02/05 15:56:28 by ncatrien         ###   ########lyon.fr    #
+#    Updated: 2021/02/08 08:27:17 by ncatrien         ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,5 +28,5 @@ RUN apt-get -qq install -y php-json php-mbstring
 EXPOSE 80 443
 
 
-CMD ["bash", "-v", "install_script.sh"]
-#CMD ["nginx", "-g", "daemon off;"]
+#CMD ["bash", "-v", "install_script.sh"]
+CMD ["nginx", "-g", "daemon off;"]
