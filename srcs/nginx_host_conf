@@ -21,15 +21,20 @@
 server {
 	listen 80;
 	listen [::]:80;
-	server_name localhost;
-	root /var/www/localhost;
+
+	server_name localhost wwww.localhost;
+
+	return 301 https://localhost$request_uri;
 }
 
 server {
 	# SSL configuration
 	#
 	 listen 443 ssl http2;
-	 listen [::]:443 ssl;
+	 listen [::]:443 ssl http2;
+
+	 ssl_certificate /etc/ssl/certs/nginx-selfsigned.crt;
+	 ssl_certificate_key /etc/ssl/private/nginx-selfsigned.key;
 	#
 	# Note: You should disable gzip for SSL traffic.
 	# See: https://bugs.debian.org/773332
@@ -45,11 +50,9 @@ server {
 	root /var/www/localhost;
 
 	# Add index.php to the list if you are using PHP
-	index index.html index.htm index.nginx-debian.html;
+	index index.php index.html index.htm index.nginx-debian.html;
 
 	server_name localhost;
-	ssl_certificate /root/.local/share/mkcert/rootCA.pem;
- 	ssl_certificate_key /root/.local/share/mkcert/rootCA-key.pem;
 
 	location / {
 		# First attempt to serve request as file, then
@@ -59,14 +62,14 @@ server {
 
 	# pass PHP scripts to FastCGI server
 	#
-	#location ~ \.php$ {
-	#	include snippets/fastcgi-php.conf;
-	#
-	#	# With php-fpm (or other unix sockets):
-	#	fastcgi_pass unix:/run/php/php7.3-fpm.sock;
+	location ~ \.php$ {
+		include snippets/fastcgi-php.conf;
+	
+		# With php-fpm (or other unix sockets):
+		fastcgi_pass unix:/run/php/php7.3-fpm.sock;
 	#	# With php-cgi (or other tcp sockets):
 	#	fastcgi_pass 127.0.0.1:9000;
-	#}
+	}
 
 	# deny access to .htaccess files, if Apache's document root
 	# concurs with nginx's one
