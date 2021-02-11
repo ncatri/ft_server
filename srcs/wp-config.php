@@ -28,7 +28,7 @@ define( 'DB_NAME', 'blog' );
 define( 'DB_USER', 'blog' );
 
 /** Mot de passe de la base de données MySQL. */
-define( 'DB_PASSWORD', 'pass' );
+define( 'DB_PASSWORD', 'blog' );
 
 /** Adresse de l’hébergement MySQL. */
 define( 'DB_HOST', 'localhost' );

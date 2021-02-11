@@ -3,20 +3,19 @@
 apt update
 apt install -y wget
 
-# # # #
-apt install -y vim
-# # # #
-
 # nginx installation and configuration
 apt install -y nginx
 mkdir -p /var/www/localhost
+
+if [ $INDEX = off ]
+then
+	rm /root/nginx_host_conf
+	mv /root/nginx_host_conf_index_off /root/nginx_host_conf
+fi
+
 cp /root/nginx_host_conf /etc/nginx/sites-available/localhost
 ln -s /etc/nginx/sites-available/localhost /etc/nginx/sites-enabled/localhost
 cp /root/index.html /var/www/localhost
-if [ $INDEX==on ]
-then
-	echo "autoindex on" >> /etc/nginx/sites-available/localhost
-fi
 
 # mariadb installation
 apt install -y mariadb-server
@@ -46,8 +45,8 @@ apt-get -y purge expect
 # creating the database for wordpress
 echo "CREATE DATABASE blog;" | mysql -u root
 echo "CREATE USER \"blog\"@\"localhost\";" | mysql -u root
-echo "SET password FOR \"blog\"@\"localhost\" = password('pass');" | mysql -u root
-echo "GRANT ALL PRIVILEGES ON blog.* TO \"blog\"@\"localhost\" IDENTIFIED BY \"pass\""| mysql -u root
+echo "SET password FOR \"blog\"@\"localhost\" = password('blog');" | mysql -u root
+echo "GRANT ALL PRIVILEGES ON blog.* TO \"blog\"@\"localhost\" IDENTIFIED BY \"blog\""| mysql -u root
 echo "FLUSH PRIVILEGES;" | mysql -u root
 
 # installing php and phpmyadmin
@@ -58,6 +57,9 @@ mkdir /var/www/localhost/phpmyadmin
 tar xf phpMyAdmin* --strip-components=1 -C /var/www/localhost/phpmyadmin
 rm phpMyAdmin-*
 mv /root/config.inc.php /var/www/localhost/phpmyadmin 
+mysql < /var/www/localhost/phpmyadmin/sql/create_tables.sql -u root
+echo "GRANT ALL PRIVILEGES ON phpmyadmin.* TO 'pma'@'localhost' IDENTIFIED BY 'hippocampe';" | mysql -u root
+echo "FLUSH PRIVILEGES;" | mysql -u root
 
 # installing wordpress
 #phpextensions
@@ -69,7 +71,6 @@ mv wordpress/ /var/www/localhost/
 mv /root/wp-config.php /var/www/localhost/wordpress/
 mkdir /var/www/localhost/phpmyadmin/tmp
 chmod 777 /var/www/localhost/phpmyadmin/tmp
-mysql < /var/www/localhost/phpmyadmin/sql/create_tables.sql -u root
 
 # generating certificate for ssl connection
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
@@ -80,4 +81,5 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
 service php7.3-fpm start
 nginx -s reload
 service nginx start
+
 tail -f /var/log/nginx/error.log
